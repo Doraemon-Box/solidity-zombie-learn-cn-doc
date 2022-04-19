@@ -1,49 +1,7 @@
-# 第一章
+# Solidity简介
 
-```solidity
-pragma solidity ^0.4.19;
 
-// 僵尸工厂
-contract ZombieFactory {
-    
-    // 创建僵尸事件
-    event NewZombie(uint zombieId, string name, uint dna);
 
-    uint dnaDigits = 16;
-    uint dnaModulus = 10 ** dnaDigits;
-    
-    // 创建僵尸结构体
-    struct Zombie {
-        string name;
-        uint dna;
-    }
-    
-    // 创建僵尸结构体数组
-    Zombie[] public zombies;
+## 注意事项
 
-    // 在这里定义映射
-    
-    // 创建僵尸、private作用域只能本合约调用
-    function _createZombie(string _name, uint _dna) private {
-        // 读取ID  array.push()-1 为数组的索引 
-        uint id = zombies.push(Zombie(_name, _dna)) - 1;
-        // 调用事件、使用web3.js监听事件、处理结果
-        NewZombie(id, _name, _dna);
-    }
-    
-    // 根据名字创建生成随机数
-    function _generateRandomDna(string _str) private view returns (uint) {
-        //keccak256() 将任意的字串生成64位 16进制的数值
-        uint rand = uint(keccak256(_str));
-        return rand % dnaModulus;
-    }
-    
-    // 根据名字创建随机的僵尸(web3.js调用)
-    function createRandomZombie(string _name) public {
-        uint randDna = _generateRandomDna(_name);
-        _createZombie(_name, randDna);
-    }
-
-}
-
-```
+* Solidity中不支持原生字符串的比较、*我们只能通过比较* 两字符串的 keccak256 哈希值来进行判断
